@@ -297,7 +297,7 @@ var connection = mysql.createConnection({
       start();
     });
   };
-  
+
   viewRoles = () => {
     connection.query("SELECT  r.id, r.title, r.salary, d.name as Department_Name FROM role AS r INNER JOIN department AS d ON r.department_id = d.id", (err, res) => {
       if (err) throw err;
@@ -321,3 +321,89 @@ var connection = mysql.createConnection({
       start();
     });
   };
+
+  updateSomething = () => {
+    inquirer.prompt([
+      {
+        name: "update",
+        type: "list",
+        message: "Choose something to update:",
+        choices: ["Update employee roles", "Update employee managers", "EXIT"]
+      }
+    ]).then(answer => {
+      if (answer.update === "Update employee roles") {
+        updateEmployeeRole();
+      }
+      else if (answer.update === "Update employee managers") {
+        updateEmployeeManager();
+      }
+      else if(answer.update === "EXIT") {
+        figlet('Thanks for using FSC Employee Tracker', (err, result) => {
+          console.log(err || result);
+        });
+  
+        connection.end();
+      } else {
+        connection.end();
+      }
+    })
+  };
+  
+  updateEmployeeRole = () => {
+    let employeeOptions = [];
+  
+    for (var i = 0; i < employees.length; i++) {
+      employeeOptions.push(Object(employees[i]));
+    }
+    inquirer.prompt([
+      {
+        name: "updateRole",
+        type: "list",
+        message: "Which employee's role do you want to update?",
+        choices: function () {
+          var choiceArray = [];
+          for (var i = 0; i < employeeOptions.length; i++) {
+            choiceArray.push(employeeOptions[i].Employee_Name);
+          }
+          return choiceArray;
+        }
+      }
+    ]).then(answer => {
+      let roleOptions = [];
+      for (i = 0; i < roles.length; i++) {
+        roleOptions.push(Object(roles[i]));
+      };
+      for (i = 0; i < employeeOptions.length; i++) {
+        if (employeeOptions[i].Employee_Name === answer.updateRole) {
+          employeeSelected = employeeOptions[i].id
+        }
+      }
+      inquirer.prompt([
+        {
+          name: "newRole",
+          type: "list",
+          message: "Select a new role:",
+          choices: function() {
+            var choiceArray = [];
+            for (var i = 0; i < roleOptions.length; i++) {
+              choiceArray.push(roleOptions[i].title)
+            }
+            return choiceArray;
+          }
+        }
+      ]).then(answer => {
+  for (i = 0; i < roleOptions.length; i++) {
+    if (answer.newRole === roleOptions[i].title) {
+      newChoice = roleOptions[i].id
+      connection.query(`UPDATE employee SET role_id = ${newChoice} WHERE id = ${employeeSelected}`), (err, res) => {
+        if (err) throw err;
+      };
+    }
+  }
+  console.log("Role updated succesfully");
+getEmployees();
+getRoles();
+start();
+    })
+  })
+};
