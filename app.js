@@ -147,3 +147,77 @@ var connection = mysql.createConnection({
       }) 
     })
   };
+
+  addRole = () => {
+    let departmentOptions = [];
+    for (i = 0; i < departments.length; i++) {
+      departmentOptions.push(Object(departments[i]));
+    };
+  
+    inquirer.prompt([
+      {
+        name: "title",
+        type: "input",
+        message: "What role would you like to add?"
+      },
+      {
+        name: "salary",
+        type: "input",
+        message: "What is the salary for this possition?"
+      },
+      {
+        name: "department_id",
+        type: "list",
+        message: "What is the department for this possition?",
+        choices: departmentOptions
+      },
+    ]).then(function(answer) {
+      for (i = 0; i < departmentOptions.length; i++) {
+        if (departmentOptions[i].name === answer.department_id) {
+          department_id = departmentOptions[i].id
+        }
+      }
+      connection.query(`INSERT INTO role (title, salary, department_id) VALUES ('${answer.title}', '${answer.salary}', ${department_id})`, (err, res) => {
+        if (err) throw err;
+  
+        console.log("1 new role added: " + answer.title);
+        getRoles();
+        start();
+      }) 
+    })
+  };
+  
+  addEmployee = () => {
+    getRoles();
+    getManagers();
+    let roleOptions = [];
+    for (i = 0; i < roles.length; i++) {
+      roleOptions.push(Object(roles[i]));
+    };
+    let managerOptions = [];
+    for (i = 0; i < managers.length; i++) {
+      managerOptions.push(Object(managers[i]));
+    }
+    inquirer.prompt([
+      {
+        name: "first_name",
+        type: "input",
+        message: "What is the employee's first name?"
+      },
+      {
+        name: "last_name",
+        type: "input",
+        message: "What is the employee's last name?"
+      },
+      {
+        name: "role_id",
+        type: "list",
+        message: "What is the role for this employee?",
+        choices: function() {
+          var choiceArray = [];
+          for (var i = 0; i < roleOptions.length; i++) {
+            choiceArray.push(roleOptions[i].title)
+          }
+          return choiceArray;
+        }
+      },
