@@ -8,18 +8,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hoffman1200/Homework-12.git"
+    "url": "https://github.com/Wampastomp99/Homework-12.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/hoffman1200/Homework-12/issues"
+    "url": "https://github.com/Wampastomp99/Homework-12/issues"
   },
-  "homepage": "https://github.com/hoffman1200/Homework-12#readme",
+  "homepage": "https://github.com/Wampastomp99/Homework-12#readme",
   "dependencies": {
     "console-table-printer": "^1.6.3",
     "console.table": "^0.10.0",
-    "figlet": "^1.4.0",
+    "figlet": "^1.5.0",
     "inquirer": "^7.3.3",
     "mysql": "^2.18.1"
   }

@@ -24,16 +24,16 @@ var connection = mysql.createConnection({
   connection.connect(function(err) {
     if (err) throw err;
     start();
-    getDepartments();
-    getRoles();
-    getManagers();
-    getEmployees();
+    //getDepartments();
+    //getRoles();
+    //getManagers();
+   // getEmployees();
   });
 
 
   start = () => {
 
-    inquirer
+    return inquirer
       .prompt({
         name: "choices",
         type: "list",
